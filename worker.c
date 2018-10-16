@@ -34,7 +34,6 @@ https://www.gnu.org/licenses/
 
 void *worker(void *arg){
 	extern sem_t counter_sem;
-	extern lua_State *Lua_interpreter;
 	char buffer[HTTP_REQUEST_SIZE];
 	const char *response;
 	buffer[HTTP_REQUEST_SIZE-1]='\0';
