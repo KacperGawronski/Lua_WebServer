@@ -41,11 +41,11 @@ void *worker(void *arg){
 	
 	n=recv(((struct stack_element *)arg)->s,buffer,HTTP_REQUEST_SIZE,MSG_DONTWAIT);
 	#ifdef LUA_ENABLE
-		lua_getglobal(Lua_interpreter,"process_http_request");
-		lua_pushstring(Lua_interpreter,buffer);
-		lua_call(Lua_interpreter,1,1);
-		lua_call(Lua_interpreter,0,1);
-		response=lua_tostring(Lua_interpreter,-1);
+		lua_getglobal(((struct stack_element *)arg)->Lua_interpreter,"process_http_request");
+		lua_pushstring(((struct stack_element *)arg)->Lua_interpreter,buffer);
+		lua_call(((struct stack_element *)arg)->Lua_interpreter,1,1);
+		lua_call(((struct stack_element *)arg)->Lua_interpreter,0,1);
+		response=lua_tostring(((struct stack_element *)arg)->Lua_interpreter,-1);
 	#endif
 	#ifndef LUA_ENABLE
 		response="HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=UTF-8\r\nConnection: keep-alive\r\n\r\n<html><body>Hello World</body></html>\r\n";
