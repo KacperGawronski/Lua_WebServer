@@ -24,9 +24,11 @@ https://www.gnu.org/licenses/
 #include <string.h>
 #include <stdio.h>
 
-#include <lua5.3/lua.h>
-#include <lua5.3/lualib.h>
-#include <lua5.3/lauxlib.h>
+#ifdef LUA_ENABLE
+	#include <lua5.3/lua.h>
+	#include <lua5.3/lualib.h>
+	#include <lua5.3/lauxlib.h>
+#endif
 
 #define HTTP_REQUEST_SIZE 10240
 
