@@ -47,6 +47,9 @@ void *worker(void *arg){
 		lua_call(Lua_interpreter,0,1);
 		response=lua_tostring(Lua_interpreter,-1);
 	#endif
+	#ifndef LUA_ENABLE
+		response="HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=UTF-8\r\nConnection: keep-alive\r\n\r\n<html><body>Hello World</body></html>\r\n";
+	#endif
 	if(n>0)send(((struct stack_element *)arg)->s,response,strlen(response),0);
 	
 	
