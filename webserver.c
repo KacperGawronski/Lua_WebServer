@@ -1,25 +1,19 @@
-/*
-This file is part of Extensionable Webserver.
+/*This file is part of Lua Webserver.
 
-Extensionable Webserver is free software: you can redistribute it and/or
+Lua Webserver is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License as published
 by the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-Extensionable Webserver is distributed in the hope that it will be
+Lua Webserver is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Extensionable Webserver. If not, see
+along with Lua Webserver. If not, see
 https://www.gnu.org/licenses/
 */
-
-
-#ifdef LUA_ENABLE
-#undef LUA_ENABLE
-#endif
 
 #include <sys/socket.h>
 #include <netdb.h>
@@ -33,13 +27,11 @@ https://www.gnu.org/licenses/
 #include "worker.h"
 
 
-#ifdef LUA_ENABLE
-	#include <lua5.3/lua.h>
-	#include <lua5.3/lualib.h>
-	#include <lua5.3/lauxlib.h>
-#endif
+#include <lua5.3/lua.h>
+#include <lua5.3/lualib.h>
+#include <lua5.3/lauxlib.h>
 
-#define MAX_THREADS_NUMBER 2000
+#define MAX_THREADS_NUMBER 2
 
 sem_t counter_sem;
 pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER;
@@ -57,13 +49,11 @@ int main(void){
 		tmp=malloc(sizeof(*tmp));
 		tmp->s=0;
 		
-		#ifdef LUA_ENABLE
-			/*STARTING Lua interpreter*/
-			tmp->Lua_interpreter=luaL_newstate();
-			luaL_openlibs(tmp->Lua_interpreter);
-			/*loading app*/
-			luaL_dofile(tmp->Lua_interpreter,"app.lua");
-		#endif
+		/*STARTING Lua interpreter*/
+		tmp->Lua_interpreter=luaL_newstate();
+		luaL_openlibs(tmp->Lua_interpreter);
+		/*loading app*/
+		luaL_dofile(tmp->Lua_interpreter,"app.lua");
 				
 		stack_push(tmp);
 	}
