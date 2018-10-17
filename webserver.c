@@ -15,7 +15,7 @@ along with Lua Webserver. If not, see
 https://www.gnu.org/licenses/
 */
 
-#define APP_FILE "app/app.lua"
+#define APP_FILE "./app/app.lua"
 
 #include <sys/socket.h>
 #include <netdb.h>
