@@ -45,10 +45,11 @@ void *worker(void *arg){
 			
 			lua_getglobal(((struct stack_element *)arg)->Lua_interpreter,"process_request");
 			lua_pushstring(((struct stack_element *)arg)->Lua_interpreter,buffer);
+			printf("buffer");
 			lua_call(((struct stack_element *)arg)->Lua_interpreter,1,1);
 			
 			
-			while(!lua_isnil(((struct stack_element *)arg)->Lua_interpreter,-1)&&LUA_YIELD==lua_resume(((struct stack_element *)arg)->Lua_interpreter,NULL,0)){
+			while(lua_isfunction(((struct stack_element *)arg)->Lua_interpreter,-1)&&LUA_YIELD==lua_resume(((struct stack_element *)arg)->Lua_interpreter,NULL,0)){
 				response=lua_tostring(((struct stack_element *)arg)->Lua_interpreter,-1);
 				send(((struct stack_element *)arg)->s,response,strlen(response),0);
 				lua_pop(((struct stack_element *)arg)->Lua_interpreter,1);

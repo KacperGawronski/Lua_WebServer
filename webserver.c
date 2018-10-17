@@ -15,7 +15,7 @@ along with Lua Webserver. If not, see
 https://www.gnu.org/licenses/
 */
 
-#define APP_FILE "./app/app.lua"
+#define APP_FILE "app/app.lua"
 
 #include <sys/socket.h>
 #include <netdb.h>
@@ -46,11 +46,6 @@ void SIG_handler(int sig){
 	}
 	close(s);
 }
-
-
-
-
-
 
 
 #define MAX_THREADS_NUMBER 100
