@@ -24,9 +24,12 @@ https://www.gnu.org/licenses/
 #include <string.h>
 #include <stdio.h>
 
+#include <regex.h>
+
 #include <lua5.3/lua.h>
 #include <lua5.3/lualib.h>
 #include <lua5.3/lauxlib.h>
+
 
 #define HTTP_REQUEST_SIZE 10240
 
@@ -35,21 +38,23 @@ void *worker(void *arg){
 	char buffer[HTTP_REQUEST_SIZE];
 	const char *response;
 	buffer[HTTP_REQUEST_SIZE-1]='\0';
-	int n;
+	int n,i;
 	
 	while((n=recv(((struct stack_element *)arg)->s,buffer,HTTP_REQUEST_SIZE-1,MSG_DONTWAIT))>0){
-		lua_getglobal(((struct stack_element *)arg)->Lua_interpreter,"process_request");
-		lua_pushstring(((struct stack_element *)arg)->Lua_interpreter,buffer);
-		lua_call(((struct stack_element *)arg)->Lua_interpreter,1,1);
-		
-		
-		while(!lua_isnil(((struct stack_element *)arg)->Lua_interpreter,-1)&&LUA_YIELD==lua_resume(((struct stack_element *)arg)->Lua_interpreter,NULL,0)){
-			response=lua_tostring(((struct stack_element *)arg)->Lua_interpreter,-1);
-			send(((struct stack_element *)arg)->s,response,strlen(response),0);
-			lua_pop(((struct stack_element *)arg)->Lua_interpreter,1);
+		if(!strncmp(buffer,"GET",3)){
+			
+			lua_getglobal(((struct stack_element *)arg)->Lua_interpreter,"process_request");
+			lua_pushstring(((struct stack_element *)arg)->Lua_interpreter,buffer);
+			lua_call(((struct stack_element *)arg)->Lua_interpreter,1,1);
+			
+			
+			while(!lua_isnil(((struct stack_element *)arg)->Lua_interpreter,-1)&&LUA_YIELD==lua_resume(((struct stack_element *)arg)->Lua_interpreter,NULL,0)){
+				response=lua_tostring(((struct stack_element *)arg)->Lua_interpreter,-1);
+				send(((struct stack_element *)arg)->s,response,strlen(response),0);
+				lua_pop(((struct stack_element *)arg)->Lua_interpreter,1);
+			}
 		}
 	}
-	
 	close(((struct stack_element*)arg)->s);
 	stack_push((struct stack_element *)arg);
 	sem_post(&counter_sem);
