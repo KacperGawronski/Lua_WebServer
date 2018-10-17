@@ -31,7 +31,7 @@ https://www.gnu.org/licenses/
 #include <lua5.3/lualib.h>
 #include <lua5.3/lauxlib.h>
 
-#define MAX_THREADS_NUMBER 2
+#define MAX_THREADS_NUMBER 1000
 
 sem_t counter_sem;
 pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER;
