@@ -15,7 +15,6 @@ along with Lua Webserver. If not, see
 https://www.gnu.org/licenses/
 */
 
-#define APP_FILE "app/app.lua"
 
 #include <sys/socket.h>
 #include <netdb.h>
@@ -65,6 +64,8 @@ int main(void){
 	/*signals*/
 	signal(SIGTERM,SIG_handler);
 	signal(SIGINT,SIG_handler);
+	signal(SIGKILL,SIG_handler);
+
 
 
 
@@ -75,9 +76,10 @@ int main(void){
 		/*STARTING Lua interpreter*/
 		tmp->Lua_interpreter=luaL_newstate();
 		luaL_openlibs(tmp->Lua_interpreter);
+		
 		/*loading app*/
-		luaL_dofile(tmp->Lua_interpreter,APP_FILE);
-				
+		tmp_s=luaL_dofile(tmp->Lua_interpreter,"app/app.lua");
+		if(tmp_s){perror("Error loading script:");return 6;}
 		stack_push(tmp);
 	}
 
